@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Steven Miller</title>
+  <link href="http://stevenmiller888.github.com/atom.xml" rel="self"/>
+  <link href="http://stevenmiller888.github.com"/>
+  <updated>2015-05-22T07:46:03.792Z</updated>
+  <id>http://stevenmiller888.github.com</id>
+  <author>
+    <name>Steven Miller</name>
+  </author>
+  <entry>
+    <title>Remembering &#x60;.shift()&#x60; and &#x60;.unshift()&#x60;</title>
+    <link href="http://stevenmiller888.github.com/remembering-shift-vs-unshift"/>
+    <id>http://stevenmiller888.github.com/remembering-shift-vs-unshift</id>
+    <updated>2015-05-22T00:00:00.000Z</updated>
+    <author>
+      <name>Steven Miller</name>
+    </author>
+    <summary type="html">&lt;p&gt;If you’re like me, you forget the difference between &lt;code&gt;.shift()&lt;/code&gt; and &lt;code&gt;.unshift()&lt;/code&gt; all the time. Here’s a little trick to remembering them. Picture a keyboard. Now think of that keyboard as an array, with the left side of the keyboard corresponding to the front of the array, and the right side of the keyboard corresponding to the back of the array. Imagine yourself pressing down the left &lt;code&gt;shift&lt;/code&gt; key. Think of this as “removing” it from the keyboard (array). Similarly, the &lt;code&gt;shift&lt;/code&gt; function removes an element from the front of the array. Now picture yourself removing your finger from the left &lt;code&gt;shift&lt;/code&gt; key, and it comes back up. You just “added” (or unshifted) an element to the array.&lt;/p&gt;
+</summary>
+    <content type="html">&lt;p&gt;If you’re like me, you forget the difference between &lt;code&gt;.shift()&lt;/code&gt; and &lt;code&gt;.unshift()&lt;/code&gt; all the time. Here’s a little trick to remembering them. Picture a keyboard. Now think of that keyboard as an array, with the left side of the keyboard corresponding to the front of the array, and the right side of the keyboard corresponding to the back of the array. Imagine yourself pressing down the left &lt;code&gt;shift&lt;/code&gt; key. Think of this as “removing” it from the keyboard (array). Similarly, the &lt;code&gt;shift&lt;/code&gt; function removes an element from the front of the array. Now picture yourself removing your finger from the left &lt;code&gt;shift&lt;/code&gt; key, and it comes back up. You just “added” (or unshifted) an element to the array.&lt;/p&gt;
+</content>
+  </entry>
+</feed>

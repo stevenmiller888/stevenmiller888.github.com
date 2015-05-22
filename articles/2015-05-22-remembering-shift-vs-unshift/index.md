@@ -1,0 +1,4 @@
+
+# Remembering `.shift()` and `.unshift()`
+
+If you're like me, you forget the difference between `.shift()` and `.unshift()` all the time. Here's a little trick to remembering them. Picture a keyboard. Now think of that keyboard as an array, with the left side of the keyboard corresponding to the front of the array, and the right side of the keyboard corresponding to the back of the array. Imagine yourself pressing down the left `shift` key. Think of this as "removing" it from the keyboard (array). Similarly, the `shift` function removes an element from the front of the array. Now picture yourself removing your finger from the left `shift` key, and it comes back up. You just "added" (or unshifted) an element to the array.

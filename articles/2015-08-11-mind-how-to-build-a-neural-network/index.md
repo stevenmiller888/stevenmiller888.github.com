@@ -3,7 +3,7 @@
 
 [Artificial neural networks](https://en.wikipedia.org/wiki/Artificial_neural_network) are statistical learning models, inspired by biological neural networks (central nervous systems, such as the brain), that are used in [machine learning](https://en.wikipedia.org/wiki/List_of_machine_learning_concepts). These networks are represented as systems of interconnected "neurons", which send messages to each other. The connections within the network can be systematically adjusted based on inputs and outputs, making them ideal for supervised learning.
 
-Neural networks can be intimidating, especially for people with little experience in machine learning and cognitive science! However, through code, this tutorial will explain how neural networks operate. By the end, you will know how to build your own flexible, learning network.
+Neural networks can be intimidating, especially for people with little experience in machine learning and cognitive science! However, through code, this tutorial will explain how neural networks operate. By the end, you will know how to build your own flexible, learning network, similar to [Mind](https://www.github.com/stevenmiller888/mind).
 
 The only prerequisite is having a basic understanding of JavaScript. Other than that, you don't need to know anything. Have fun!
 
@@ -288,11 +288,31 @@ Through just one iteration of forward and back propagation, we've already improv
 
 ## Building the Mind
 
-Now that we have a basic understanding of how neural networks are trained, we can represent both forward and back propagation mathematically. Once we define the relationships mathematically, we can then represent each step and operation via code.
+Building a complete neural network library requires more than just understanding forward and back propagation. We also need to think about how a user of the network will want to configure it (e.g. set total number of learning iterations) and other API-level design considerations.
 
-In our XOR example above, we trained with only one row of data. Because neural networks don't require the input data to be passed in any particular order, we can train them in parallel. We can accomplish this using matrices, which we describe below.
+To simplify our explanation of neural networks via code, the code snippets below build a neural network, `Mind`, with a single hidden layer. The actual [Mind](https://github.com/stevenmiller888/mind) library, however, provides the flexibility to build a network with multiple hidden layers.
 
-> Note that to simplify our explanation of neural networks via code, the code snippets below build a neural network with a single hidden layer. [Mind](https://github.com/stevenmiller888/mind), however, provides the flexibility of multiple hidden layers.
+### Initialization
+
+First, we need to set up our constructor function. Let's give the option to use the sigmoid activation or the hyperbolic tangent activation function. Additionally, we'll allow our users to set the learning rate, number of iterations, and number of units in the hidden layer, while providing sane defaults for each. Here's our constructor:
+
+```javascript
+function Mind(opts) {
+  if (!(this instanceof Mind)) return new Mind(opts);
+  opts = opts || {};
+
+  opts.activator === 'sigmoid'
+    ? (this.activate = sigmoid, this.activatePrime = sigmoidPrime)
+    : (this.activate = htan, this.activatePrime = htanPrime);
+
+  // hyperparameters
+  this.learningRate = opts.learningRate || 0.7;
+  this.iterations = opts.iterations || 10000;
+  this.hiddenUnits = opts.hiddenUnits || 3;
+}
+```
+
+> Note that here we use the [`sigmoid`](https://www.npmjs.com/package/sigmoid), [`sigmoid-prime`](https://www.npmjs.com/package/sigmoid-prime), [`htan`](https://www.npmjs.com/package/htan), and [`htan-prime`](https://www.npmjs.com/package/htan-prime) npm modules.
 
 ### Forward Propagation
 
@@ -365,7 +385,7 @@ Since we're dealing with matrices, we handle the division by multiplying the `de
 
 Then, we do this process [again](https://github.com/stevenmiller888/mind/blob/master/lib/index.js#L200) for the input to hidden layer.
 
-The code for the back propagation function is below:
+The code for the back propagation function is below. Note that we're passing what is returned by the `forward` function as the second argument:
 
 ```javascript
 Mind.prototype.back = function(examples, results) {

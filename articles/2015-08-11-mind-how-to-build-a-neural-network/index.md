@@ -5,7 +5,7 @@
 
 Neural networks can be intimidating, especially for people with little experience in machine learning and cognitive science! However, through code, this tutorial will explain how neural networks operate. By the end, you will know how to build your own flexible, learning network, similar to [Mind](https://www.github.com/stevenmiller888/mind).
 
-The only prerequisite is having a basic understanding of JavaScript. Other than that, you don't need to know anything. Have fun!
+The only prerequisites are having a basic understanding of JavaScript, high-school Calculus, and simple matrix operations. Other than that, you don't need to know anything. Have fun!
 
 ## Understanding the Mind
 

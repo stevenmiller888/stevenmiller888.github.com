@@ -3,7 +3,7 @@
   <title>Steven Miller</title>
   <link href="http://stevenmiller888.github.com/atom.xml" rel="self"/>
   <link href="http://stevenmiller888.github.com"/>
-  <updated>2015-08-11T16:59:09.606Z</updated>
+  <updated>2015-08-11T17:05:36.589Z</updated>
   <id>http://stevenmiller888.github.com</id>
   <author>
     <name>Steven Miller</name>
@@ -224,7 +224,9 @@ w9: 0.9     w9: 0.4229
   return ret;
 };
 &lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;Note that &lt;code&gt;this.activate&lt;/code&gt; and &lt;code&gt;this.weights&lt;/code&gt; are set at the initialization of a new &lt;code&gt;Mind&lt;/code&gt; via &lt;a href=&quot;https://github.com/stevenmiller888/mind/blob/master/lib/index.js#L40&quot;&gt;passing an &lt;code&gt;opts&lt;/code&gt; object&lt;/a&gt;.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Note that &lt;code&gt;this.activate&lt;/code&gt; and &lt;code&gt;this.weights&lt;/code&gt; are set at the initialization of a new &lt;code&gt;Mind&lt;/code&gt; via &lt;a href=&quot;https://github.com/stevenmiller888/mind/blob/master/lib/index.js#L40&quot;&gt;passing an &lt;code&gt;opts&lt;/code&gt; object&lt;/a&gt;. &lt;code&gt;multiply&lt;/code&gt; and &lt;code&gt;transform&lt;/code&gt; come from an npm &lt;a href=&quot;https://www.npmjs.com/package/node-matrix&quot;&gt;module&lt;/a&gt; for performing basic matrix operations.&lt;/p&gt;
+&lt;/blockquote&gt;
 &lt;h3 id=&quot;back-propagation&quot;&gt;Back Propagation&lt;/h3&gt;
 &lt;p&gt;Back propagation is a bit more complicated. Let’s look at the last layer first. We calculate the &lt;code&gt;output error&lt;/code&gt; (same equation as before):&lt;/p&gt;
 &lt;p&gt;&lt;img src=&quot;http://i.imgur.com/IAddjWL.png&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
@@ -264,6 +266,9 @@ w9: 0.9     w9: 0.4229
   return errorOutputLayer;
 };
 &lt;/code&gt;&lt;/pre&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Note that &lt;code&gt;subtract&lt;/code&gt;, &lt;code&gt;dot&lt;/code&gt; , &lt;code&gt;scalar&lt;/code&gt;, &lt;code&gt;multiply&lt;/code&gt;, and &lt;code&gt;add&lt;/code&gt; come from the same npm &lt;a href=&quot;https://www.npmjs.com/package/node-matrix&quot;&gt;module&lt;/a&gt; we used before for performing matrix operations.&lt;/p&gt;
+&lt;/blockquote&gt;
 &lt;h3 id=&quot;putting-both-together&quot;&gt;Putting both together&lt;/h3&gt;
 &lt;p&gt;Now that we have both the forward and back propagation, we can define the function &lt;code&gt;learn&lt;/code&gt; that will put them together. The &lt;code&gt;learn&lt;/code&gt; function will accept training data (&lt;code&gt;examples&lt;/code&gt;) as an array of matrices. Then, we assign random samples to the initial weights (via &lt;a href=&quot;https://github.com/stevenmiller888/sample&quot;&gt;&lt;code&gt;sample&lt;/code&gt;&lt;/a&gt;). Lastly, we use a &lt;code&gt;for&lt;/code&gt; loop and repeat &lt;code&gt;this.iterations&lt;/code&gt; to do both forward and backward propagation.&lt;/p&gt;
 &lt;pre&gt;&lt;code class=&quot;lang-javascript&quot;&gt;Mind.prototype.learn = function(examples) {

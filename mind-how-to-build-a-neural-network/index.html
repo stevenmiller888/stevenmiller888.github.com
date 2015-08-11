@@ -249,7 +249,9 @@ w9: 0.9     w9: 0.4229
   return ret;
 };
 </code></pre>
-<p>Note that <code>this.activate</code> and <code>this.weights</code> are set at the initialization of a new <code>Mind</code> via <a href="https://github.com/stevenmiller888/mind/blob/master/lib/index.js#L40">passing an <code>opts</code> object</a>.</p>
+<blockquote>
+<p>Note that <code>this.activate</code> and <code>this.weights</code> are set at the initialization of a new <code>Mind</code> via <a href="https://github.com/stevenmiller888/mind/blob/master/lib/index.js#L40">passing an <code>opts</code> object</a>. <code>multiply</code> and <code>transform</code> come from an npm <a href="https://www.npmjs.com/package/node-matrix">module</a> for performing basic matrix operations.</p>
+</blockquote>
 <h3 id="back-propagation">Back Propagation</h3>
 <p>Back propagation is a bit more complicated. Let’s look at the last layer first. We calculate the <code>output error</code> (same equation as before):</p>
 <p><img src="http://i.imgur.com/IAddjWL.png" alt=""></p>
@@ -289,6 +291,9 @@ w9: 0.9     w9: 0.4229
   return errorOutputLayer;
 };
 </code></pre>
+<blockquote>
+<p>Note that <code>subtract</code>, <code>dot</code> , <code>scalar</code>, <code>multiply</code>, and <code>add</code> come from the same npm <a href="https://www.npmjs.com/package/node-matrix">module</a> we used before for performing matrix operations.</p>
+</blockquote>
 <h3 id="putting-both-together">Putting both together</h3>
 <p>Now that we have both the forward and back propagation, we can define the function <code>learn</code> that will put them together. The <code>learn</code> function will accept training data (<code>examples</code>) as an array of matrices. Then, we assign random samples to the initial weights (via <a href="https://github.com/stevenmiller888/sample"><code>sample</code></a>). Lastly, we use a <code>for</code> loop and repeat <code>this.iterations</code> to do both forward and backward propagation.</p>
 <pre><code class="lang-javascript">Mind.prototype.learn = function(examples) {

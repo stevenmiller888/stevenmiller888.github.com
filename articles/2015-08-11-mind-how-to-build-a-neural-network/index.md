@@ -345,7 +345,7 @@ Mind.prototype.forward = function(examples) {
 };
 ```
 
-Note that `this.activate` and `this.weights` are set at the initialization of a new `Mind` via [passing an `opts` object](https://github.com/stevenmiller888/mind/blob/master/lib/index.js#L40).
+> Note that `this.activate` and `this.weights` are set at the initialization of a new `Mind` via [passing an `opts` object](https://github.com/stevenmiller888/mind/blob/master/lib/index.js#L40). `multiply` and `transform` come from an npm [module](https://www.npmjs.com/package/node-matrix) for performing basic matrix operations.
 
 ### Back Propagation
 
@@ -407,6 +407,8 @@ Mind.prototype.back = function(examples, results) {
   return errorOutputLayer;
 };
 ```
+
+> Note that `subtract`, `dot` , `scalar`, `multiply`, and `add` come from the same npm [module](https://www.npmjs.com/package/node-matrix) we used before for performing matrix operations.
 
 ### Putting both together
 

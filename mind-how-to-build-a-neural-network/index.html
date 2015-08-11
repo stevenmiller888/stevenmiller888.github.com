@@ -44,7 +44,7 @@
   <time class="Article-date" datetime="2015-08-11T00:00:00.000Z">Monday, 10 August 2015</time>
   <div class="Article-content Prose Prose--medium">
     <p><a href="https://en.wikipedia.org/wiki/Artificial_neural_network">Artificial neural networks</a> are statistical learning models, inspired by biological neural networks (central nervous systems, such as the brain), that are used in <a href="https://en.wikipedia.org/wiki/List_of_machine_learning_concepts">machine learning</a>. These networks are represented as systems of interconnected “neurons”, which send messages to each other. The connections within the network can be systematically adjusted based on inputs and outputs, making them ideal for supervised learning.</p>
-<p>Neural networks can be intimidating, especially for people with little experience in machine learning and cognitive science! However, through code, this tutorial will explain how neural networks operate. By the end, you will know how to build your own flexible, learning network.</p>
+<p>Neural networks can be intimidating, especially for people with little experience in machine learning and cognitive science! However, through code, this tutorial will explain how neural networks operate. By the end, you will know how to build your own flexible, learning network, similar to <a href="https://www.github.com/stevenmiller888/mind">Mind</a>.</p>
 <p>The only prerequisite is having a basic understanding of JavaScript. Other than that, you don’t need to know anything. Have fun!</p>
 <h2 id="understanding-the-mind">Understanding the Mind</h2>
 <p>A neural network is a collection of “neurons” with “synapses” connecting them. The collection is organized into three main parts: the input layer, the hidden layer, and the output layer. Note that you can have <em>n</em> hidden layers, with the term “deep” learning implying multiple hidden layers.</p>
@@ -207,10 +207,26 @@ w9: 0.9     w9: 0.4229
 <p>Through just one iteration of forward and back propagation, we’ve already improved the network!!</p>
 <p><em>Check out <a href="https://www.youtube.com/watch?v=GlcnxUlrtek">this short video</a> for a great explanation of identifying global minima in a cost function as a way to determine necessary weight changes.</em></p>
 <h2 id="building-the-mind">Building the Mind</h2>
-<p>Now that we have a basic understanding of how neural networks are trained, we can represent both forward and back propagation mathematically. Once we define the relationships mathematically, we can then represent each step and operation via code.</p>
-<p>In our XOR example above, we trained with only one row of data. Because neural networks don’t require the input data to be passed in any particular order, we can train them in parallel. We can accomplish this using matrices, which we describe below.</p>
+<p>Building a complete neural network library requires more than just understanding forward and back propagation. We also need to think about how a user of the network will want to configure it (e.g. set total number of learning iterations) and other API-level design considerations.</p>
+<p>To simplify our explanation of neural networks via code, the code snippets below build a neural network, <code>Mind</code>, with a single hidden layer. The actual <a href="https://github.com/stevenmiller888/mind">Mind</a> library, however, provides the flexibility to build a network with multiple hidden layers.</p>
+<h3 id="initialization">Initialization</h3>
+<p>First, we need to set up our constructor function. Let’s give the option to use the sigmoid activation or the hyperbolic tangent activation function. Additionally, we’ll allow our users to set the learning rate, number of iterations, and number of units in the hidden layer, while providing sane defaults for each. Here’s our constructor:</p>
+<pre><code class="lang-javascript">function Mind(opts) {
+  if (!(this instanceof Mind)) return new Mind(opts);
+  opts = opts || {};
+
+  opts.activator === &#39;sigmoid&#39;
+    ? (this.activate = sigmoid, this.activatePrime = sigmoidPrime)
+    : (this.activate = htan, this.activatePrime = htanPrime);
+
+  // hyperparameters
+  this.learningRate = opts.learningRate || 0.7;
+  this.iterations = opts.iterations || 10000;
+  this.hiddenUnits = opts.hiddenUnits || 3;
+}
+</code></pre>
 <blockquote>
-<p>Note that to simplify our explanation of neural networks via code, the code snippets below build a neural network with a single hidden layer. <a href="https://github.com/stevenmiller888/mind">Mind</a>, however, provides the flexibility of multiple hidden layers.</p>
+<p>Note that here we use the <a href="https://www.npmjs.com/package/sigmoid"><code>sigmoid</code></a>, <a href="https://www.npmjs.com/package/sigmoid-prime"><code>sigmoid-prime</code></a>, <a href="https://www.npmjs.com/package/htan"><code>htan</code></a>, and <a href="https://www.npmjs.com/package/htan-prime"><code>htan-prime</code></a> npm modules.</p>
 </blockquote>
 <h3 id="forward-propagation">Forward Propagation</h3>
 <p>The forward propagation process is a series of sum products and transformations. Let’s calculate the first hidden sum with all four input data:</p>
@@ -253,7 +269,7 @@ w9: 0.9     w9: 0.4229
 <p>Note that we scale the change by a magnitude, <code>learningRate</code>, which is from 0 to 1. The learning rate applies a greater or lesser portion of the respective adjustment to the old weight. If there is a large variability in the input (there is little relationship among the training data) and the rate was set high, then the network may not learn well or at all. Setting the rate too high also introduces the risk of <a href="https://en.wikipedia.org/wiki/Overfitting">‘overfitting’</a>, or training the network to generate a relationship from noise instead of the actual underlying function.</p>
 <p>Since we’re dealing with matrices, we handle the division by multiplying the <code>delta output sum</code> with the hidden results matrices’ transpose.</p>
 <p>Then, we do this process <a href="https://github.com/stevenmiller888/mind/blob/master/lib/index.js#L200">again</a> for the input to hidden layer.</p>
-<p>The code for the back propagation function is below:</p>
+<p>The code for the back propagation function is below. Note that we’re passing what is returned by the <code>forward</code> function as the second argument:</p>
 <pre><code class="lang-javascript">Mind.prototype.back = function(examples, results) {
   var activatePrime = this.activatePrime;
   var learningRate = this.learningRate;

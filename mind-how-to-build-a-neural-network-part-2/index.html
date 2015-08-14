@@ -1,0 +1,188 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Mind: How to Build a Neural Network (Part Two)</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="twitter:creator" content="stevenmiller888">
+    <meta name="twitter:card" content="">
+    <link rel="alternate" type="application/atom+xml" href="atom.xml">
+    <link rel="stylesheet" href="/index.css">
+    <script type="text/javascript">
+      !function(){var analytics=window.analytics=window.analytics||[];if(!analytics.initialize)if(analytics.invoked)window.console&&console.error&&console.error("Segment snippet included twice.");else{analytics.invoked=!0;analytics.methods=["trackSubmit","trackClick","trackLink","trackForm","pageview","identify","group","track","ready","alias","page","once","off","on"];analytics.factory=function(t){return function(){var e=Array.prototype.slice.call(arguments);e.unshift(t);analytics.push(e);return analytics}};for(var t=0;t<analytics.methods.length;t++){var e=analytics.methods[t];analytics[e]=analytics.factory(e)}analytics.load=function(t){var e=document.createElement("script");e.type="text/javascript";e.async=!0;e.src=("https:"===document.location.protocol?"https://":"http://")+"cdn.segment.com/analytics.js/v1/"+t+"/analytics.min.js";var n=document.getElementsByTagName("script")[0];n.parentNode.insertBefore(e,n)};analytics.SNIPPET_VERSION="3.0.1";
+      analytics.load('TFacKtmQ5DyiALIChJ0gyyEiXqsz2dPz');
+      }}();
+    </script>
+  </head>
+  <body>
+    <div class="Layout">
+      <div class="Layout-nav">
+        <div class="Profile">
+          <a class="Profile-avatar" href="/"></a>
+          <h1 class="Profile-name Heading Heading--medium"><a href="/">Steven Miller</a></h4>
+          <p class="Profile-role">Software Engineer at <a class="Link" href="https://segment.com">Segment</a></p>
+        
+          <ul class="Profile-links">
+            <a class="Profile-link Profile-twitter-link" href="https://twitter.com/stevenmiller888">Twitter</a>
+            <a class="Profile-link Profile-github-link" href="https://github.com/stevenmiller888">GitHub</a>
+            
+            
+            
+            
+            
+            
+            <a class="Profile-link Profile-rss-link" href="/atom.xml">RSS<a>
+          </ul>
+        
+          <a class="Profile-twitter-button twitter-follow-button" href="https://twitter.com/stevenmiller888" data-show-count="false">Follow @stevenmiller888</a>
+          <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+        </div>      </div>
+      <div class="Layout-main"><article class="Article">
+  <a class="Article-home" href="/">Home</a>
+  <h1 class="Article-title Heading Heading--huge">Mind: How to Build a Neural Network (Part Two)</h1>
+  <time class="Article-date" datetime="2015-08-14T00:00:00.000Z">Thursday, 13 August 2015</time>
+  <div class="Article-content Prose Prose--medium">
+    <p><em>In this second part on learning how to build a neural network, we will dive into the implementation of a flexible library in JavaScript. In case you missed it, here is <a href="/mind-how-to-build-a-neural-network">Part One</a>, which goes over what neural networks are and how they operate.</em></p>
+<h2 id="building-the-mind">Building the Mind</h2>
+<p>Building a complete neural network library requires more than just understanding forward and back propagation. We also need to think about how a user of the network will want to configure it (e.g. set total number of learning iterations) and other API-level design considerations.</p>
+<p>To simplify our explanation of neural networks via code, the code snippets below build a neural network, <code>Mind</code>, with a single hidden layer. The actual <a href="https://github.com/stevenmiller888/mind">Mind</a> library, however, provides the flexibility to build a network with multiple hidden layers.</p>
+<h3 id="initialization">Initialization</h3>
+<p>First, we need to set up our constructor function. Let’s give the option to use the sigmoid activation or the hyperbolic tangent activation function. Additionally, we’ll allow our users to set the learning rate, number of iterations, and number of units in the hidden layer, while providing sane defaults for each. Here’s our constructor:</p>
+<pre><code class="lang-javascript">function Mind(opts) {
+  if (!(this instanceof Mind)) return new Mind(opts);
+  opts = opts || {};
+
+  opts.activator === &#39;sigmoid&#39;
+    ? (this.activate = sigmoid, this.activatePrime = sigmoidPrime)
+    : (this.activate = htan, this.activatePrime = htanPrime);
+
+  // hyperparameters
+  this.learningRate = opts.learningRate || 0.7;
+  this.iterations = opts.iterations || 10000;
+  this.hiddenUnits = opts.hiddenUnits || 3;
+}
+</code></pre>
+<blockquote>
+<p>Note that here we use the <a href="https://www.npmjs.com/package/sigmoid"><code>sigmoid</code></a>, <a href="https://www.npmjs.com/package/sigmoid-prime"><code>sigmoid-prime</code></a>, <a href="https://www.npmjs.com/package/htan"><code>htan</code></a>, and <a href="https://www.npmjs.com/package/htan-prime"><code>htan-prime</code></a> npm modules.</p>
+</blockquote>
+<h3 id="forward-propagation">Forward Propagation</h3>
+<p>The forward propagation process is a series of sum products and transformations. Let’s calculate the first hidden sum with all four input data:</p>
+<p><img src="http://i.imgur.com/ZhO0Nj2.png" alt=""></p>
+<p>This can be represented as such:</p>
+<p><img src="http://i.imgur.com/XcSZgTk.png" alt=""></p>
+<p>To get the result from the sum, we apply the activation function, sigmoid, to each element:</p>
+<p><img src="http://i.imgur.com/rhnNQZW.png" alt=""></p>
+<p>Then, we do this again with the hidden result as the new input to get to the final output result. The entire forward propagation code looks like:</p>
+<pre><code class="lang-javascript">Mind.prototype.forward = function(examples) {
+  var activate = this.activate;
+  var weights = this.weights;
+  var ret = {};
+
+  ret.hiddenSum = multiply(weights.inputHidden, examples.input);
+  ret.hiddenResult = ret.hiddenSum.transform(activate);
+  ret.outputSum = multiply(weights.hiddenOutput, ret.hiddenResult);
+  ret.outputResult = ret.outputSum.transform(activate);
+
+  return ret;
+};
+</code></pre>
+<blockquote>
+<p>Note that <code>this.activate</code> and <code>this.weights</code> are set at the initialization of a new <code>Mind</code> via <a href="https://github.com/stevenmiller888/mind/blob/master/lib/index.js#L40">passing an <code>opts</code> object</a>. <code>multiply</code> and <code>transform</code> come from an npm <a href="https://www.npmjs.com/package/node-matrix">module</a> for performing basic matrix operations.</p>
+</blockquote>
+<h3 id="back-propagation">Back Propagation</h3>
+<p>Back propagation is a bit more complicated. Let’s look at the last layer first. We calculate the <code>output error</code> (same equation as before):</p>
+<p><img src="http://i.imgur.com/IAddjWL.png" alt=""></p>
+<p>And the equivalent in code:</p>
+<pre><code class="lang-javascript">var errorOutputLayer = subtract(examples.output, results.outputResult);
+</code></pre>
+<p>Then, we determine the change in the output layer sum, or <code>delta output sum</code>:</p>
+<p><img src="http://i.imgur.com/4qnVb6S.png" alt=""></p>
+<p>And the code:</p>
+<pre><code class="lang-javascript">var deltaOutputLayer = dot(results.outputSum.transform(activatePrime), errorOutputLayer);
+</code></pre>
+<p>Then, we figure out the hidden output changes. We use this formula:</p>
+<p><img src="http://i.imgur.com/TR7FS2S.png" alt=""></p>
+<p>Here is the code:</p>
+<pre><code class="lang-javascript">var hiddenOutputChanges = scalar(multiply(deltaOutputLayer, results.hiddenResult.transpose()), learningRate);
+</code></pre>
+<p>Note that we scale the change by a magnitude, <code>learningRate</code>, which is from 0 to 1. The learning rate applies a greater or lesser portion of the respective adjustment to the old weight. If there is a large variability in the input (there is little relationship among the training data) and the rate was set high, then the network may not learn well or at all. Setting the rate too high also introduces the risk of <a href="https://en.wikipedia.org/wiki/Overfitting">‘overfitting’</a>, or training the network to generate a relationship from noise instead of the actual underlying function.</p>
+<p>Since we’re dealing with matrices, we handle the division by multiplying the <code>delta output sum</code> with the hidden results matrices’ transpose.</p>
+<p>Then, we do this process <a href="https://github.com/stevenmiller888/mind/blob/master/lib/index.js#L200">again</a> for the input to hidden layer.</p>
+<p>The code for the back propagation function is below. Note that we’re passing what is returned by the <code>forward</code> function as the second argument:</p>
+<pre><code class="lang-javascript">Mind.prototype.back = function(examples, results) {
+  var activatePrime = this.activatePrime;
+  var learningRate = this.learningRate;
+  var weights = this.weights;
+
+  // compute weight adjustments
+  var errorOutputLayer = subtract(examples.output, results.outputResult);
+  var deltaOutputLayer = dot(results.outputSum.transform(activatePrime), errorOutputLayer);
+  var hiddenOutputChanges = scalar(multiply(deltaOutputLayer, results.hiddenResult.transpose()), learningRate);
+  var deltaHiddenLayer = dot(multiply(weights.hiddenOutput.transpose(), deltaOutputLayer), results.hiddenSum.transform(activatePrime));
+  var inputHiddenChanges = scalar(multiply(deltaHiddenLayer, examples.input.transpose()), learningRate);
+
+  // adjust weights
+  weights.inputHidden = add(weights.inputHidden, inputHiddenChanges);
+  weights.hiddenOutput = add(weights.hiddenOutput, hiddenOutputChanges);
+
+  return errorOutputLayer;
+};
+</code></pre>
+<blockquote>
+<p>Note that <code>subtract</code>, <code>dot</code> , <code>scalar</code>, <code>multiply</code>, and <code>add</code> come from the same npm <a href="https://www.npmjs.com/package/node-matrix">module</a> we used before for performing matrix operations.</p>
+</blockquote>
+<h3 id="putting-both-together">Putting both together</h3>
+<p>Now that we have both the forward and back propagation, we can define the function <code>learn</code> that will put them together. The <code>learn</code> function will accept training data (<code>examples</code>) as an array of matrices. Then, we assign random samples to the initial weights (via <a href="https://github.com/stevenmiller888/sample"><code>sample</code></a>). Lastly, we use a <code>for</code> loop and repeat <code>this.iterations</code> to do both forward and backward propagation.</p>
+<pre><code class="lang-javascript">Mind.prototype.learn = function(examples) {
+  examples = normalize(examples);
+
+  this.weights = {
+    inputHidden: Matrix({
+      columns: this.hiddenUnits,
+      rows: examples.input[0].length,
+      values: sample
+    }),
+    hiddenOutput: Matrix({
+      columns: examples.output[0].length,
+      rows: this.hiddenUnits,
+      values: sample
+    })
+  };
+
+  for (var i = 0; i &lt; this.iterations; i++) {
+    var results = this.forward(examples);
+    var errors = this.back(examples, results);
+  }
+
+  return this;
+};
+</code></pre>
+<p><em>More information about the Mind API <a href="https://github.com/stevenmiller888/mind">here</a>.</em></p>
+<p>Now you have a basic understanding of how neural networks operate, how to train them, and also how to build your own!</p>
+<p>If you have any questions or comments, don’t hesitate to find me on <a href="https://www.twitter.com/stevenmiller888">twitter</a>. Shout out to <a href="https://www.twitter.com/andyjiang">Andy</a> for his help on reviewing this.</p>
+<h2 id="additional-resources">Additional Resources</h2>
+<p><a href="https://www.youtube.com/watch?v=bxe2T-V8XRs">Neural Networks Demystified</a>, by <a href="https://www.twitter.com/stephencwelch">Stephen Welch</a></p>
+<p><a href="http://neuralnetworksanddeeplearning.com/chap3.html">Neural Networks and Deep Learning</a>, by <a href="http://michaelnielsen.org/">Michael Nielsen</a></p>
+<p><a href="http://natureofcode.com/book/chapter-10-neural-networks/">The Nature of Code, Neural Networks</a>, by <a href="https://twitter.com/shiffman">Daniel Shiffman</a></p>
+<p><a href="https://en.wikipedia.org/wiki/Artificial_neural_network">Artificial Neural Networks</a>, Wikipedia</p>
+<p><a href="http://www.cheshireeng.com/Neuralyst/nnbg.htm">Basic Concepts for Neural Networks</a>, by Ross Berteig</p>
+<p><a href="http://www.saedsayad.com/artificial_neural_network.htm">Artificial Neural Networks</a>, by <a href="http://www.saedsayad.com/author.htm">Saed Sayad</a></p>
+<p><a href="http://www.researchgate.net/post/How_to_decide_the_number_of_hidden_layers_and_nodes_in_a_hidden_layer">How to Decide the Number of Hidden Layers and Nodes in a Hidden Layer</a></p>
+<p><a href="http://in.mathworks.com/matlabcentral/answers/72654-how-to-decide-size-of-neural-network-like-number-of-neurons-in-a-hidden-layer-number-of-hidden-lay">How to Decide size of Neural Network like number of neurons in a hidden layer &amp; Number of hidden layers?</a></p>
+
+  </div>
+</article>
+<script>
+  analytics.page('Article', {
+    article: {
+      name: "Mind: How to Build a Neural Network (Part Two)",
+      date: "2015-08-14T00:00:00.000Z"
+    }
+  });
+</script>
+      </div>
+    </div>
+    <script src="/index.js"></script>
+  </body>
+</html>

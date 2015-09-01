@@ -76,11 +76,7 @@ There are many types of activation functions—linear, sigmoid, hyperbolic tange
 
 *Table taken from [this paper](http://www.asprs.org/a/publications/pers/2003journal/november/2003_nov_1225-1234.pdf).*
 
-For our example, let's use the [sigmoid function](https://en.wikipedia.org/wiki/Sigmoid_function)* for activation:
-
-![](http://i.imgur.com/xgQmN9r.png)
-
-The sigmoid function looks like this, graphically:
+For our example, let's use the [sigmoid function](https://en.wikipedia.org/wiki/Sigmoid_function) for activation. The sigmoid function looks like this, graphically:
 
 ![](http://i.imgur.com/RVbqJsg.jpg)
 

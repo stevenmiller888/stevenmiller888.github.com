@@ -238,12 +238,12 @@
  * Resets.
  */
 
-/*! normalize.css v3.0.2 | MIT License | git.io/normalize */
+/*! normalize.css v3.0.3 | MIT License | github.com/necolas/normalize.css */
 
 /**
  * 1. Set default font family to sans-serif.
- * 2. Prevent iOS text size adjust after orientation change, without disabling
- *    user zoom.
+ * 2. Prevent iOS and IE text size adjust after device orientation change,
+ *    without disabling user zoom.
  */
 
 html {
@@ -316,7 +316,7 @@ audio:not([controls]) {
 
 /**
  * Address `[hidden]` styling not present in IE 8/9/10.
- * Hide the `template` element in IE 8/9/11, Safari, and Firefox < 22.
+ * Hide the `template` element in IE 8/9/10/11, Safari, and Firefox < 22.
  */
 
 [hidden],
@@ -336,7 +336,8 @@ a {
 }
 
 /**
- * Improve readability when focused and also mouse hovered in all browsers.
+ * Improve readability of focused elements when they are also in an
+ * active/hover state.
  */
 
 a:active,
@@ -601,15 +602,14 @@ input[type="number"]::-webkit-outer-spin-button {
 
 /**
  * 1. Address `appearance` set to `searchfield` in Safari and Chrome.
- * 2. Address `box-sizing` set to `border-box` in Safari and Chrome
- *    (include `-moz` to future-proof).
+ * 2. Address `box-sizing` set to `border-box` in Safari and Chrome.
  */
 
 input[type="search"] {
   -webkit-appearance: textfield;
   /* 1 */
-  /* 2 */
   box-sizing: content-box;
+  /* 2 */
 }
 
 /**
@@ -1865,6 +1865,24 @@ html {
   margin-bottom: 30px;
 }
 
+#Reading-progress {
+  position: fixed;
+  top: 0px;
+  width: 100%;
+  height: 2px;
+  margin: 0px;
+  left: 0px;
+  z-index: 99;
+}
+
+.bar {
+  height: 2px;
+  background: #5CCC5C;
+  position: fixed;
+  top: 0px;
+  z-index: 99;
+}
+
 /**
  * Summaries.
  */
@@ -2044,6 +2062,7 @@ html {
   background-repeat: none;
   background-size: contain;
   opacity: .7;
+  -webkit-transition: opacity .2s;
   transition: opacity .2s;
 }
 

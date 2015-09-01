@@ -38,7 +38,10 @@
           <a class="Profile-twitter-button twitter-follow-button" href="https://twitter.com/stevenmiller888" data-show-count="false">Follow @stevenmiller888</a>
           <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
         </div>      </div>
-      <div class="Layout-main"><article class="Article">
+      <div class="Layout-main"><div id="Reading-progress">
+  <span id="Progress-bar" class="bar"></span>
+</div>
+<article class="Article">
   <a class="Article-home" href="/">Home</a>
   <h1 class="Article-title Heading Heading--huge">Mind: How to Build a Neural Network (Part Two)</h1>
   <time class="Article-date" datetime="2015-08-14T00:00:00.000Z">Thursday, 13 August 2015</time>
@@ -179,6 +182,15 @@
       name: "Mind: How to Build a Neural Network (Part Two)",
       date: "2015-08-14T00:00:00.000Z"
     }
+  });
+  window.addEventListener('scroll', function(e) {
+    var s = (window.pageYOffset !== undefined) ? window.pageYOffset : (document.documentElement || document.body.parentNode || document.body).scrollTop;
+    var body = document.body;
+    var html = document.documentElement;
+    var d = Math.max(body.scrollHeight, body.offsetHeight, html.clientHeight, html.scrollHeight, html.offsetHeight);
+    var c = window.innerHeight;
+    var position = (s / (d - c)) * 100;
+    document.getElementById('Progress-bar').setAttribute('style', 'width: ' + position + '%');
   });
 </script>
       </div>

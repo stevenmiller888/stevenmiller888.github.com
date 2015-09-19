@@ -83,9 +83,9 @@ For our example, let's use the [sigmoid function](https://en.wikipedia.org/wiki/
 And applying S(x) to the three hidden layer _sums_, we get:
 
 ```
-S(1.0) = 0.26894142137
+S(1.0) = 0.73105857863
 S(1.3) = 0.78583498304
-S(0.8) = 0.31002551887
+S(0.8) = 0.68997448112
 ```
 
 We add that to our neural network as hidden layer _results_:

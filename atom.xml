@@ -3,11 +3,54 @@
   <title>Steven Miller</title>
   <link href="http://stevenmiller888.github.com/atom.xml" rel="self"/>
   <link href="http://stevenmiller888.github.com"/>
-  <updated>2015-09-19T21:46:06.614Z</updated>
+  <updated>2015-09-25T20:49:51.387Z</updated>
   <id>http://stevenmiller888.github.com</id>
   <author>
     <name>Steven Miller</name>
   </author>
+  <entry>
+    <title>Intruder: How to crack Wi-Fi networks in Node.js</title>
+    <link href="http://stevenmiller888.github.com/intruder-cracking-wifi-networks-in-node"/>
+    <id>http://stevenmiller888.github.com/intruder-cracking-wifi-networks-in-node</id>
+    <updated>2015-09-25T00:00:00.000Z</updated>
+    <author>
+      <name>Steven Miller</name>
+    </author>
+    <summary type="html">&lt;p&gt;I’m going to explain how to use &lt;a href=&quot;https://github.com/stevenmiller888/intruder&quot;&gt;Intruder&lt;/a&gt; to crack a Wi-Fi network in Node.js. Then, I’m going to explain how it works at a high-level.&lt;/p&gt;
+</summary>
+    <content type="html">&lt;p&gt;I’m going to explain how to use &lt;a href=&quot;https://github.com/stevenmiller888/intruder&quot;&gt;Intruder&lt;/a&gt; to crack a Wi-Fi network in Node.js. Then, I’m going to explain how it works at a high-level.&lt;/p&gt;
+&lt;p&gt;Start by finding the name of the network you want to crack. In this case, we’ll use an arbitrary network named “Home”. Then, you’ll want to &lt;code&gt;require&lt;/code&gt; Intruder, initialize it, and call the &lt;code&gt;crack&lt;/code&gt; function:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;var Intruder = require(&amp;#39;intruder&amp;#39;);
+
+var intruder = Intruder();
+
+intruder.crack(&amp;#39;Home&amp;#39;, function(err, key) {
+  if (err) throw new Error(err);
+  console.log(key);
+});
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;That’s it. Sort of. It turns out it might take some time for Intruder to crack the network. So maybe you want to monitor it’s progress? Here’s how to do that:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;var Intruder = require(&amp;#39;intruder&amp;#39;);
+
+Intruder()
+  .on(&amp;#39;attempt&amp;#39;, function(ivs) {
+    console.log(ivs);
+  })
+  .crack(&amp;#39;Home&amp;#39;, function(err, key) {
+    if (err) throw new Error(err);
+    console.log(key);
+  });
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Now, I’ll explain how it works:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;When you call &lt;code&gt;intruder.crack&lt;/code&gt;, first we look up all the wireless networks in range. Then, we filter them out to find the network that you passed in.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;After finding the specific network, we start sniffing network packets on the network channel.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Sniffing packets will generate a &lt;code&gt;capture&lt;/code&gt; file that contains information about the captured packets. We find that file and then pass the file into &lt;a href=&quot;https://github.com/aircrack-ng/aircrack-ng&quot;&gt;aircrack&lt;/a&gt;, which will attempt to decrypt it. You usually need at least 80,000 IVs, according to aircrack’s documentation.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;If you have any questions or comments, don’t hesitate to find me on &lt;a href=&quot;https://www.twitter.com/stevenmiller888&quot;&gt;twitter&lt;/a&gt;.&lt;/p&gt;
+</content>
+  </entry>
   <entry>
     <title>Mind: How to Build a Neural Network (Part Two)</title>
     <link href="http://stevenmiller888.github.com/mind-how-to-build-a-neural-network-part-2"/>

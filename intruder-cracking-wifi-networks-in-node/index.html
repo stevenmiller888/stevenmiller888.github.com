@@ -1,0 +1,104 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Intruder: How to crack Wi-Fi networks in Node.js</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="twitter:creator" content="stevenmiller888">
+    <meta name="twitter:card" content="">
+    <link rel="alternate" type="application/atom+xml" href="atom.xml">
+    <link rel="stylesheet" href="/index.css">
+    <script type="text/javascript">
+      !function(){var analytics=window.analytics=window.analytics||[];if(!analytics.initialize)if(analytics.invoked)window.console&&console.error&&console.error("Segment snippet included twice.");else{analytics.invoked=!0;analytics.methods=["trackSubmit","trackClick","trackLink","trackForm","pageview","identify","group","track","ready","alias","page","once","off","on"];analytics.factory=function(t){return function(){var e=Array.prototype.slice.call(arguments);e.unshift(t);analytics.push(e);return analytics}};for(var t=0;t<analytics.methods.length;t++){var e=analytics.methods[t];analytics[e]=analytics.factory(e)}analytics.load=function(t){var e=document.createElement("script");e.type="text/javascript";e.async=!0;e.src=("https:"===document.location.protocol?"https://":"http://")+"cdn.segment.com/analytics.js/v1/"+t+"/analytics.min.js";var n=document.getElementsByTagName("script")[0];n.parentNode.insertBefore(e,n)};analytics.SNIPPET_VERSION="3.0.1";
+      analytics.load('TFacKtmQ5DyiALIChJ0gyyEiXqsz2dPz');
+      }}();
+    </script>
+  </head>
+  <body>
+    <div class="Layout">
+      <div class="Layout-nav">
+        <div class="Profile">
+          <a class="Profile-avatar" href="/"></a>
+          <h1 class="Profile-name Heading Heading--medium"><a href="/">Steven Miller</a></h4>
+          <p class="Profile-role">Software Engineer at <a class="Link" href="https://segment.com">Segment</a></p>
+        
+          <ul class="Profile-links">
+            <a class="Profile-link Profile-twitter-link" href="https://twitter.com/stevenmiller888">Twitter</a>
+            <a class="Profile-link Profile-github-link" href="https://github.com/stevenmiller888">GitHub</a>
+            
+            
+            
+            
+            
+            
+            <a class="Profile-link Profile-rss-link" href="/atom.xml">RSS<a>
+          </ul>
+        
+          <a class="Profile-twitter-button twitter-follow-button" href="https://twitter.com/stevenmiller888" data-show-count="false">Follow @stevenmiller888</a>
+          <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+        </div>      </div>
+      <div class="Layout-main"><div id="Reading-progress">
+  <span id="Progress-bar" class="bar"></span>
+</div>
+<article class="Article">
+  <a class="Article-home" href="/">Home</a>
+  <h1 class="Article-title Heading Heading--huge">Intruder: How to crack Wi-Fi networks in Node.js</h1>
+  <time class="Article-date" datetime="2015-09-25T00:00:00.000Z">Thursday, 24 September 2015</time>
+  <div class="Article-content Prose Prose--medium">
+    <p>I’m going to explain how to use <a href="https://github.com/stevenmiller888/intruder">Intruder</a> to crack a Wi-Fi network in Node.js. Then, I’m going to explain how it works at a high-level.</p>
+<p>Start by finding the name of the network you want to crack. In this case, we’ll use an arbitrary network named “Home”. Then, you’ll want to <code>require</code> Intruder, initialize it, and call the <code>crack</code> function:</p>
+<pre><code>var Intruder = require(&#39;intruder&#39;);
+
+var intruder = Intruder();
+
+intruder.crack(&#39;Home&#39;, function(err, key) {
+  if (err) throw new Error(err);
+  console.log(key);
+});
+</code></pre><p>That’s it. Sort of. It turns out it might take some time for Intruder to crack the network. So maybe you want to monitor it’s progress? Here’s how to do that:</p>
+<pre><code>var Intruder = require(&#39;intruder&#39;);
+
+Intruder()
+  .on(&#39;attempt&#39;, function(ivs) {
+    console.log(ivs);
+  })
+  .crack(&#39;Home&#39;, function(err, key) {
+    if (err) throw new Error(err);
+    console.log(key);
+  });
+</code></pre><p>Now, I’ll explain how it works:</p>
+<ol>
+<li><p>When you call <code>intruder.crack</code>, first we look up all the wireless networks in range. Then, we filter them out to find the network that you passed in.</p>
+</li>
+<li><p>After finding the specific network, we start sniffing network packets on the network channel.</p>
+</li>
+<li><p>Sniffing packets will generate a <code>capture</code> file that contains information about the captured packets. We find that file and then pass the file into <a href="https://github.com/aircrack-ng/aircrack-ng">aircrack</a>, which will attempt to decrypt it. You usually need at least 80,000 IVs, according to aircrack’s documentation.</p>
+</li>
+</ol>
+<p>If you have any questions or comments, don’t hesitate to find me on <a href="https://www.twitter.com/stevenmiller888">twitter</a>.</p>
+
+  </div>
+</article>
+<script>
+  analytics.page('Article', {
+    article: {
+      name: "Intruder: How to crack Wi-Fi networks in Node.js",
+      date: "2015-09-25T00:00:00.000Z"
+    }
+  });
+  window.addEventListener('scroll', function(e) {
+    var s = (window.pageYOffset !== undefined) ? window.pageYOffset : (document.documentElement || document.body.parentNode || document.body).scrollTop;
+    var body = document.body;
+    var html = document.documentElement;
+    var d = Math.max(body.scrollHeight, body.offsetHeight, html.clientHeight, html.scrollHeight, html.offsetHeight);
+    var c = window.innerHeight;
+    var position = (s / (d - c)) * 100;
+    document.getElementById('Progress-bar').setAttribute('style', 'width: ' + position + '%');
+  });
+</script>
+      </div>
+    </div>
+    <script src="/index.js"></script>
+  </body>
+</html>

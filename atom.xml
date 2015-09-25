@@ -3,7 +3,7 @@
   <title>Steven Miller</title>
   <link href="http://stevenmiller888.github.com/atom.xml" rel="self"/>
   <link href="http://stevenmiller888.github.com"/>
-  <updated>2015-09-25T20:49:51.387Z</updated>
+  <updated>2015-09-25T20:54:44.410Z</updated>
   <id>http://stevenmiller888.github.com</id>
   <author>
     <name>Steven Miller</name>
@@ -45,7 +45,7 @@ Intruder()
 &lt;/li&gt;
 &lt;li&gt;&lt;p&gt;After finding the specific network, we start sniffing network packets on the network channel.&lt;/p&gt;
 &lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Sniffing packets will generate a &lt;code&gt;capture&lt;/code&gt; file that contains information about the captured packets. We find that file and then pass the file into &lt;a href=&quot;https://github.com/aircrack-ng/aircrack-ng&quot;&gt;aircrack&lt;/a&gt;, which will attempt to decrypt it. You usually need at least 80,000 IVs, according to aircrack’s documentation.&lt;/p&gt;
+&lt;li&gt;&lt;p&gt;Sniffing packets will generate a &lt;code&gt;capture&lt;/code&gt; file that contains information about the captured packets. We find that file and then pass the file into &lt;a href=&quot;https://github.com/aircrack-ng/aircrack-ng&quot;&gt;aircrack&lt;/a&gt;, which will attempt to decrypt it. You usually need at least 80,000 &lt;a href=&quot;https://en.wikipedia.org/wiki/Initialization_vector&quot;&gt;IVs&lt;/a&gt;, according to aircrack’s documentation.&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ol&gt;
 &lt;p&gt;If you have any questions or comments, don’t hesitate to find me on &lt;a href=&quot;https://www.twitter.com/stevenmiller888&quot;&gt;twitter&lt;/a&gt;.&lt;/p&gt;

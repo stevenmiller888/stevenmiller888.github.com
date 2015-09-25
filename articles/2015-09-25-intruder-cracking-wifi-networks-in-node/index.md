@@ -38,6 +38,6 @@ Now, I'll explain how it works:
 
 2. After finding the specific network, we start sniffing network packets on the network channel.
 
-3. Sniffing packets will generate a `capture` file that contains information about the captured packets. We find that file and then pass the file into [aircrack](https://github.com/aircrack-ng/aircrack-ng), which will attempt to decrypt it. You usually need at least 80,000 IVs, according to aircrack's documentation.
+3. Sniffing packets will generate a `capture` file that contains information about the captured packets. We find that file and then pass the file into [aircrack](https://github.com/aircrack-ng/aircrack-ng), which will attempt to decrypt it. You usually need at least 80,000 [IVs](https://en.wikipedia.org/wiki/Initialization_vector), according to aircrack's documentation.
 
 If you have any questions or comments, don't hesitate to find me on [twitter](https://www.twitter.com/stevenmiller888).

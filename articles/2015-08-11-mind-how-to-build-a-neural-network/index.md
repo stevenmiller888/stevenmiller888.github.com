@@ -191,7 +191,7 @@ old w7 = 0.3
 old w8 = 0.5
 old w9 = 0.9
 
-new w7 = -0.1162
+new w7 = 0.1162
 new w8 = 0.329
 new w9 = 0.708
 ```
@@ -267,7 +267,7 @@ w3: 0.3     w3: 0.2681
 w4: 0.2     w4: 0.112
 w5: 0.9     w5: 0.8548
 w6: 0.5     w6: 0.4681
-w7: 0.3     w7: -0.1162
+w7: 0.3     w7: 0.1162
 w8: 0.5     w8: 0.329
 w9: 0.9     w9: 0.708
 ```
@@ -276,7 +276,7 @@ Once we arrive at the adjusted weights, we start again with forward propagation.
 
 And doing a quick forward propagation, we can see that the final output here is a little closer to the expected output:
 
-![](http://imgur.com/APljTYx.png)
+![](http://i.imgur.com/UNlffE1.png)
 
 Through just one iteration of forward and back propagation, we've already improved the network!!
 

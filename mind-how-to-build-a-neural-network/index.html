@@ -113,14 +113,7 @@ S(0.8) = 0.68997448112
 Calculated = 0.77
 Target - calculated = -0.77
 </code></pre><p>To calculate the necessary change in the output sum, or <code>delta output sum</code>, we take the derivative of the activation function and apply it to the output sum. In our example, the activation function is the sigmoid function.</p>
-<p>To refresh your memory, the activation function, sigmoid, takes the sum and returns the result:</p>
-<p><img src="http://i.imgur.com/rKHEE51.png" alt=""></p>
-<p>So the derivative of sigmoid, also known as sigmoid prime, will give us the rate of change (or “slope”) of the activation function at the output sum:</p>
-<p><img src="http://i.imgur.com/8xQ6TiU.png" alt=""></p>
-<p>Since the <code>output sum margin of error</code> is the difference in the result, we can simply multiply that with the rate of change to give us the <code>delta output sum</code>:</p>
-<p><img src="http://i.imgur.com/4qnVb6S.png" alt=""></p>
-<p>Conceptually, this means that the change in the output sum is the same as the sigmoid prime of the output result. Doing the actual math, we get:</p>
-<pre><code>Delta output sum = S&#39;(sum) * (output sum margin of error)
+<pre><code>Delta output sum = S&#39;(output sum) * (output sum margin of error)
 Delta output sum = S&#39;(1.235) * (-0.77)
 Delta output sum = -0.13439890643886018
 </code></pre><p>Here is a graph of the Sigmoid function to give you an idea of how we are using the derivative to move the input towards the right direction. Note that this graph is not to scale.</p>
@@ -128,54 +121,35 @@ Delta output sum = -0.13439890643886018
 <p>Now that we have the proposed change in the output layer sum (-0.13), let’s use this in the derivative of the output sum function to determine the new change in weights.</p>
 <p>As a reminder, the mathematical definition of the <code>output sum</code> is the product of the hidden layer result and the weights between the hidden and output layer:</p>
 <p><img src="http://i.imgur.com/ITudruR.png" alt=""></p>
-<p>The derivative of the <code>output sum</code> is:</p>
-<p><img src="http://i.imgur.com/57mJyOe.png" alt=""></p>
-<p>..which can also be represented as:</p>
-<p><img src="http://i.imgur.com/TR7FS2S.png" alt=""></p>
-<p>This relationship suggests that a greater change in output sum yields a greater change in the weights; input neurons with the biggest contribution (higher weight to output neuron) should experience more change in the connecting synapse.</p>
 <p>Let’s do the math:</p>
 <pre><code>hidden result 1 = 0.73105857863
 hidden result 2 = 0.78583498304
 hidden result 3 = 0.68997448112
 
-Delta weights = delta output sum / hidden layer results
-Delta weights = -0.1344 / [0.73105, 0.78583, 0.69997]
-Delta weights = [-0.1838, -0.1710, -0.1920]
+Delta weights = delta output sum * hidden layer results
+Delta weights = -0.1344 * [0.73105, 0.78583, 0.69997]
+Delta weights = [-0.0983, -0.1056, -0.0941]
 
 old w7 = 0.3
 old w8 = 0.5
 old w9 = 0.9
 
-new w7 = 0.1162
-new w8 = 0.329
-new w9 = 0.708
-</code></pre><p>To determine the change in the weights between the <em>input and hidden</em> layers, we perform the similar, but notably different, set of calculations. Note that in the following calculations, we use the initial weights instead of the recently adjusted weights from the first part of the backward propagation.</p>
-<p>Remember that the relationship between the hidden result, the weights between the hidden and output layer, and the output sum is:</p>
-<p><img src="http://i.imgur.com/ITudruR.png" alt=""></p>
-<p>Instead of deriving for <code>output sum</code>, let’s derive for <code>hidden result</code> as a function of <code>output sum</code> to ultimately find out <code>delta hidden sum</code>:</p>
-<p><img src="http://i.imgur.com/25TS8NU.png" alt="">
-<img src="http://i.imgur.com/iQIR1MD.png" alt=""></p>
-<p>Also, remember that the change in the <code>hidden result</code> can also be defined as:</p>
-<p><img src="http://i.imgur.com/ZquX1pv.png" alt=""></p>
-<p>Let’s multiply both sides by sigmoid prime of the hidden sum:</p>
-<p><img src="http://i.imgur.com/X0wvirh.png" alt="">
-<img src="http://i.imgur.com/msHbhQl.png" alt=""></p>
-<p>All of the pieces in the above equation can be calculated, so we can determine the <code>delta hidden sum</code>:</p>
-<pre><code>Delta hidden sum = delta output sum / hidden-to-outer weights * S&#39;(hidden sum)
-Delta hidden sum = -0.1344 / [0.3, 0.5, 0.9] * S&#39;([1, 1.3, 0.8])
-Delta hidden sum = [-0.448, -0.2688, -0.1493] * [0.1966, 0.1683, 0.2139]
-Delta hidden sum = [-0.088, -0.0452, -0.0319]
-</code></pre><p>Once we get the <code>delta hidden sum</code>, we calculate the change in weights between the input and hidden layer by dividing it with the input data, <code>(1, 1)</code>. The input data here is equivalent to the <code>hidden results</code> in the earlier back propagation process to determine the change in the hidden-to-output weights. Here is the derivation of that relationship, similar to the one before:</p>
-<p><img src="http://i.imgur.com/7NmXWSh.png" alt="">
-<img src="http://i.imgur.com/1SDxECJ.png" alt="">
-<img src="http://i.imgur.com/KYuSAgw.png" alt=""></p>
+new w7 = 0.202
+new w8 = 0.394
+new w9 = 0.806
+</code></pre><p>To determine the change in the weights between the <em>input and hidden</em> layers, we perform the similar, but notably different, set of calculations. Note that in the following calculations, we use the initial weights instead of the recently adjusted weights from the first part of the backward propagation. We can determine the <code>delta hidden sum</code>:</p>
+<pre><code>Delta hidden sum = delta output sum * hidden-to-outer weights * S&#39;(hidden sum)
+Delta hidden sum = -0.1344 * [0.3, 0.5, 0.9] * S&#39;([1, 1.3, 0.8])
+Delta hidden sum = [-0.0403, -0.0672, -0.1209] * [0.1966, 0.1683, 0.2139]
+Delta hidden sum = [-0.0079, -0.0113, -0.0259]
+</code></pre><p>Once we get the <code>delta hidden sum</code>, we calculate the change in weights between the input and hidden layer by multiplying it by the input data, <code>(1, 1)</code>. The input data here is equivalent to the <code>hidden results</code> in the earlier back propagation process to determine the change in the hidden-to-output weights. Here is the derivation of that relationship, similar to the one before:</p>
 <p>Let’s do the math:</p>
 <pre><code>input 1 = 1
 input 2 = 1
 
-Delta weights = delta hidden sum / input data
-Delta weights = [-0.088, -0.0452, -0.0319] / [1, 1]
-Delta weights = [-0.088, -0.0452, -0.0319, -0.088, -0.0452, -0.0319]
+Delta weights = delta hidden sum * input
+Delta weights = [-0.0079, -0.0113, -0.0259] * [1, 1]
+Delta weights = [-0.0079, -0.0113, -0.0259, -0.0079, -0.0113, -0.0259]
 
 old w1 = 0.8
 old w2 = 0.4
@@ -184,28 +158,26 @@ old w4 = 0.2
 old w5 = 0.9
 old w6 = 0.5
 
-new w1 = 0.712
-new w2 = 0.3548
-new w3 = 0.2681
-new w4 = 0.112
-new w5 = 0.8548
-new w6 = 0.4681
+new w1 = 0.7921
+new w2 = 0.3887
+new w3 = 0.2741
+new w4 = 0.1921
+new w5 = 0.8887
+new w6 = 0.4741
 </code></pre><p>Here are the new weights, right next to the initial random starting weights as comparison:</p>
 <pre><code>old         new
 -----------------
-w1: 0.8     w1: 0.712
-w2: 0.4     w2: 0.3548
-w3: 0.3     w3: 0.2681
-w4: 0.2     w4: 0.112
-w5: 0.9     w5: 0.8548
-w6: 0.5     w6: 0.4681
-w7: 0.3     w7: 0.1162
-w8: 0.5     w8: 0.329
-w9: 0.9     w9: 0.708
+w1: 0.8     w1: 0.7921
+w2: 0.4     w2: 0.3887
+w3: 0.3     w3: 0.2741
+w4: 0.2     w4: 0.1921
+w5: 0.9     w5: 0.8887
+w6: 0.5     w6: 0.4741
+w7: 0.3     w7: 0.2020
+w8: 0.5     w8: 0.3940
+w9: 0.9     w9: 0.8060
 </code></pre><p>Once we arrive at the adjusted weights, we start again with forward propagation. When training a neural network, it is common to repeat both these processes thousands of times (by default, Mind iterates 10,000 times).</p>
-<p>And doing a quick forward propagation, we can see that the final output here is a little closer to the expected output:</p>
-<p><img src="http://i.imgur.com/UNlffE1.png" alt=""></p>
-<p>Through just one iteration of forward and back propagation, we’ve already improved the network!!</p>
+<p>And doing a quick forward propagation with our new weights, we can see that the final output is now 0.73, which is just a little bit closer to the expected output. Through just one iteration of forward and back propagation, we’ve already improved the network!!</p>
 <p><em>Check out <a href="https://www.youtube.com/watch?v=GlcnxUlrtek">this short video</a> for a great explanation of identifying global minima in a cost function as a way to determine necessary weight changes.</em></p>
 <p>If you enjoyed learning about how neural networks work, check out <a href="/mind-how-to-build-a-neural-network-part-2">Part Two</a> of this post to learn how to build your own neural network.</p>
 

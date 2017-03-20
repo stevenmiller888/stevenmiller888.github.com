@@ -85,6 +85,7 @@
 <p>There are many types of activation functions—linear, sigmoid, hyperbolic tangent, even step-wise. To be honest, I don’t know why one function is better than another.</p>
 <p><img src="https://cldup.com/hxmGABAI7Y.png" alt=""></p>
 <p><em>Table taken from <a href="http://www.asprs.org/a/publications/pers/2003journal/november/2003_nov_1225-1234.pdf">this paper</a>.</em></p>
+Hyperbolic tangent function is not correct in the original paper. It is either (1-E^(-2x))/(1+E^(-2x)) or (E^(2x)-1)/(E^(2x)+1)
 <p>For our example, let’s use the <a href="https://en.wikipedia.org/wiki/Sigmoid_function">sigmoid function</a> for activation. The sigmoid function looks like this, graphically:</p>
 <p><img src="http://i.imgur.com/RVbqJsg.jpg" alt=""></p>
 <p>And applying S(x) to the three hidden layer <em>sums</em>, we get:</p>

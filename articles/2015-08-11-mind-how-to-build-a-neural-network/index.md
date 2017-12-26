@@ -283,5 +283,3 @@ Through just one iteration of forward and back propagation, we've already improv
 *Check out [this short video](https://www.youtube.com/watch?v=GlcnxUlrtek) for a great explanation of identifying global minima in a cost function as a way to determine necessary weight changes.*
 
 If you enjoyed learning about how neural networks work, check out [Part Two](/mind-how-to-build-a-neural-network-part-2) of this post to learn how to build your own neural network.
-
-**Note: I've been working on a new project called [Maji Config](https://maji.cloud/products/config). If you're tired of duplicating config all over your codebase, or having to redeploy all your apps whenever you need to change config, this might work well for you. I'd love to hear what you think of it. Feel free to send me an <a href="mailto:stevenmiller888@me.com?Subject=Hello">email</a>.**
